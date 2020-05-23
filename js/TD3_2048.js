@@ -10,11 +10,15 @@ class maCase
 {
     valeur
     bool
+    coorX
+    coorY
 
-    constructor()
+    constructor(X, Y)
     {
         this.valeur = ""
         this.bool = false
+        this.coorX = X
+        this.coorY = Y
     }
     setValue(value)
     {
@@ -23,6 +27,22 @@ class maCase
     setBool(statusBool)
     {
         this.bool = statusBool
+    }
+    setCoorX(X)
+    {
+        this.coorX = X
+    }
+    setCoorY(Y)
+    {
+        this.coorY = Y
+    }
+    getCoorX()
+    {
+        return this.coorX
+    }
+    getCoorY()
+    {
+        return this.coorY
     }
     getValue()
     {
@@ -33,23 +53,28 @@ class maCase
         return this.bool
     }
 
+
 }
 
 function creerGrille()
 {
     grille =  []
-    for(i = 0; i < dimension; i ++)
+    for(i = 0; i <= dimension; i ++)
     {
         grille[i] = []
-        for(j = 0; j < dimension; j ++)
+        for(j = 0; j <= dimension; j ++)
         {
-            grille[i][j] = new maCase()
+            grille[i][j] = new maCase(i, j)
         }
-
-        ListeCaseVide = genererListeCaseVide(grille)
-
-        insertionValeur()
     }
+    ListeCaseVide = genererListeCaseVide(grille)
+    insertCase = choixAleatoireCase(ListeCaseVide)
+    newValue = obtenirNouvelleValeur()
+    insertionValeur(newValue, insertCase , grille)
+    insertCase = choixAleatoireCase(ListeCaseVide)
+    newValue = obtenirNouvelleValeur()
+    insertionValeur(newValue, insertCase , grille)
+    afficherGrille()
 }
 
 function actionClavier(keyPressed)
@@ -103,18 +128,25 @@ function deplacementVersDroite()
 
 }
 
-function insertionValeur(valeur, coordonnee)
+function insertionValeur(valeur, caseVide, grille)
 {
+    coorX = caseVide.coorX
+    coorY = caseVide.coorY
 
+    grille[coorX][coorY] = valeur
+    grille[coorX][coorY] = true
 }
 
 function genererListeCaseVide(grille)
 {
     tabCaseVide = []
+
     for(i = 0; i < dimension; i ++)
     {
+        console.log("i = " + i)
         for(j = 0; j < dimension; j ++)
         {
+            console.log("j = " + j)
             console.log("test dimensionnement tableau par la taille :" + tabCaseVide.length)
             caseActuel = grille[i][j]
 
@@ -126,6 +158,43 @@ function genererListeCaseVide(grille)
     }
 
     return tabCaseVide
+}
+
+function choixAleatoireCase(listeCaseVide)
+{
+    Max = listeCaseVide.length - 1
+    IndiceCaseAlea = Math.ceil(Math.random() * (Max + 1))
+
+    caseVideChoisi = listeCaseVide[IndiceCaseAlea]
+    listeCaseVide.splice(IndiceCaseAlea)
+
+    console.log("coordonnées case : " + caseVideChoisi.coorX + " ," + caseVideChoisi.coorY)
+
+    return caseVideChoisi
+}
+
+function obtenirNouvelleValeur()
+{
+    valeurAlea = Math.ceil(Math.random() * (9 + 1))
+
+    if(valeurAlea <= 9)
+    {
+        return 2;
+    }
+    else
+    {
+        return 4;
+    }
+}
+
+function afficherGrille()
+{
+    tabCase = document.querySelectorAll(".case")
+
+
+
+    console.log(tabCase.length)
+
 }
 
 

@@ -52,8 +52,6 @@ function selection()
             vide.innerHTML = element.innerHTML
             element.innerHTML = ""
             console.log("swap possible bas")
-
-
         }
         else
         {
