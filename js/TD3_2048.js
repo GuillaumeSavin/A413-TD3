@@ -74,7 +74,7 @@ function creerGrille()
     insertCase = choixAleatoireCase(ListeCaseVide)
     newValue = obtenirNouvelleValeur()
     insertionValeur(newValue, insertCase , grille)
-    afficherGrille()
+    afficherGrille(grille)
 }
 
 function actionClavier(keyPressed)
@@ -195,6 +195,24 @@ function afficherGrille()
 
     console.log(tabCase.length)
 
+}
+
+function genererListeCaseValeur(grille)
+{
+    tabCaseValeur = []
+    for(i = 0; i < dimension; i ++)
+    {
+        for (j = 0; j < dimension; j ++)
+        {
+            caseActuel = grille[i][j]
+            if(caseActuel.bool)
+            {
+                tabCaseValeur[tabCaseValeur.length] = caseActuel
+            }
+        }
+    }
+
+    return tabCaseValeur
 }
 
 
