@@ -52,6 +52,14 @@ class maCase
     {
         return this.bool
     }
+    toString()
+    {
+        let str = ""
+
+        str += "coordonnées : (" + this.coorX + "," + this.coorY + ") ,valeur : " + this.valeur + ", status : " + this.bool + "\n";
+
+        return str
+    }
 
 
 }
@@ -74,6 +82,7 @@ function creerGrille()
     insertCase = choixAleatoireCase(ListeCaseVide)
     newValue = obtenirNouvelleValeur()
     insertionValeur(newValue, insertCase , grille)
+    genererListeCaseValeur(grille)
     afficherGrille(grille)
 }
 
@@ -133,8 +142,10 @@ function insertionValeur(valeur, caseVide, grille)
     coorX = caseVide.coorX
     coorY = caseVide.coorY
 
-    grille[coorX][coorY] = valeur
-    grille[coorX][coorY] = true
+    caseActuel = grille[coorX][coorY]
+
+    caseActuel.valeur = valeur
+    caseActuel.bool = true
 }
 
 function genererListeCaseVide(grille)
@@ -143,11 +154,8 @@ function genererListeCaseVide(grille)
 
     for(i = 0; i < dimension; i ++)
     {
-        console.log("i = " + i)
         for(j = 0; j < dimension; j ++)
         {
-            console.log("j = " + j)
-            console.log("test dimensionnement tableau par la taille :" + tabCaseVide.length)
             caseActuel = grille[i][j]
 
             if(!caseActuel.bool)
@@ -162,20 +170,28 @@ function genererListeCaseVide(grille)
 
 function choixAleatoireCase(listeCaseVide)
 {
-    Max = listeCaseVide.length - 1
-    IndiceCaseAlea = Math.ceil(Math.random() * (Max + 1))
 
+    Max = listeCaseVide.length - 1
+    IndiceCaseAlea = Math.floor(Math.random() * 11)
+    IndiceCaseAlea = Math.floor(Math.random() * (Max + 1))
+    console.log("Indice = " + IndiceCaseAlea + " Max = " + Max + " Taille Tableau = " + listeCaseVide.length)
+    console.log("Tableau Before= \n" + listeCaseVide.toString())
     caseVideChoisi = listeCaseVide[IndiceCaseAlea]
-    listeCaseVide.splice(IndiceCaseAlea)
+    listeCaseVide.splice(IndiceCaseAlea, 1)
+    console.log("Tableau After= \n" + listeCaseVide.toString())
+    console.log(caseVideChoisi)
 
     console.log("coordonnées case : " + caseVideChoisi.coorX + " ," + caseVideChoisi.coorY)
 
     return caseVideChoisi
+
+
 }
 
 function obtenirNouvelleValeur()
 {
-    valeurAlea = Math.ceil(Math.random() * (9 + 1))
+    valeurAlea = Math.floor(Math.random() * 11)
+    console.log(valeurAlea);
 
     if(valeurAlea <= 9)
     {
@@ -192,7 +208,7 @@ function afficherGrille()
     tabCase = document.querySelectorAll(".case")
 
 
-
+    console.log(tabCase)
     console.log(tabCase.length)
 
 }
@@ -205,12 +221,21 @@ function genererListeCaseValeur(grille)
         for (j = 0; j < dimension; j ++)
         {
             caseActuel = grille[i][j]
+            console.log(caseActuel)
             if(caseActuel.bool)
             {
+                console.log("passeValeur")
                 tabCaseValeur[tabCaseValeur.length] = caseActuel
             }
         }
     }
+
+    for(i = 0; i < tabCaseValeur.length; i ++)
+    {
+        console.log("test tabValeur = \n" + tabCaseValeur.toString())
+    }
+
+
 
     return tabCaseValeur
 }
