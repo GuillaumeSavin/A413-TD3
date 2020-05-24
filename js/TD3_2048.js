@@ -3,6 +3,15 @@ function init()
 {
     tabCase = document.querySelectorAll(".case")
     creerGrille()
+    ListeCaseVide = genererListeCaseVide(grille)
+    insertCase = choixAleatoireCase(ListeCaseVide)
+    newValue = obtenirNouvelleValeur()
+    insertionValeur(newValue, insertCase , grille)
+    insertCase = choixAleatoireCase(ListeCaseVide)
+    newValue = obtenirNouvelleValeur()
+    insertionValeur(newValue, insertCase , grille)
+    ListeCaseValeur = genererListeCaseValeur(grille)
+    afficherGrille(ListeCaseValeur)
     document.body.addEventListener("keydown", actionClavier)
 }
 
@@ -67,23 +76,14 @@ class maCase
 function creerGrille()
 {
     grille =  []
-    for(i = 0; i <= dimension; i ++)
+    for(i = 0; i < dimension; i ++)
     {
         grille[i] = []
-        for(j = 0; j <= dimension; j ++)
+        for(j = 0; j < dimension; j ++)
         {
             grille[i][j] = new maCase(i, j)
         }
     }
-    ListeCaseVide = genererListeCaseVide(grille)
-    insertCase = choixAleatoireCase(ListeCaseVide)
-    newValue = obtenirNouvelleValeur()
-    insertionValeur(newValue, insertCase , grille)
-    insertCase = choixAleatoireCase(ListeCaseVide)
-    newValue = obtenirNouvelleValeur()
-    insertionValeur(newValue, insertCase , grille)
-    genererListeCaseValeur(grille)
-    afficherGrille(grille)
 }
 
 function actionClavier(keyPressed)
@@ -119,6 +119,9 @@ function actionClavier(keyPressed)
 
 function deplacementVersHaut()
 {
+    console.log("tests acces :\n" + grille)
+    ListeCaseVide = genererListeCaseVide(grille)
+    console.log("tab case Vide : \n" + ListeCaseVide)
 
 }
 
@@ -203,12 +206,27 @@ function obtenirNouvelleValeur()
     }
 }
 
-function afficherGrille()
+function afficherGrille(tabCaseValeur)
 {
     tabCase = document.querySelectorAll(".case")
 
+    for(i = 0; i < tabCase.length; i ++)
+    {
+        caseTop = parseInt(tabCase[i].style.top)
+        caseLeft = parseInt(tabCase[i].style.left)
+        valeur = tabCase[i].innerHTML
+        console.log("coor HTML : (" + caseTop + ", " + caseLeft + ")" + " Valeur = " + valeur)
+    }
 
-    console.log(tabCase)
+    for (i = 0; i < tabCaseValeur.length; i ++)
+    {
+        coorTop = tabCaseValeur[i].coorX
+        coorLeft = tabCaseValeur[i].coorY
+        console.log("indice case affecté : " + (coorTop * dimension + coorLeft))
+        tabCase[coorTop * dimension + coorLeft].innerHTML = tabCaseValeur[i].valeur
+    }
+
+    console.log(tabCase[0].style.top)
     console.log(tabCase.length)
 
 }
