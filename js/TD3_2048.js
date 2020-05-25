@@ -263,6 +263,7 @@ function deplacementVersHaut(grille)
 
 
             tasserVersColonne(ListeColonneATraiter[colonneATraiter], grille, "Haut")
+            fusionnerVersColonne(ListeColonneATraiter[colonneATraiter], grille, "Haut")
         }
     }
 }
@@ -283,6 +284,7 @@ function deplacementVersBas(grille)
 
 
             tasserVersColonne(ListeColonneATraiter[colonneATraiter], grille, "Bas")
+            fusionnerVersColonne(ListeColonneATraiter[colonneATraiter], grille, "Bas")
         }
     }
 }
@@ -633,7 +635,6 @@ function fusionnerVersLigne(ligne, grille, sens)
 {
     let ListeCaseValeurLigne = []
     ListeCaseValeurLigne = genererListeCaseValeurLigne(ligne, grille, sens)
-    console.log("ListeCaseValeurLigne : " + ListeCaseValeurLigne)
 
     if(sens === "Gauche")
     {
@@ -662,37 +663,84 @@ function fusionnerVersLigne(ligne, grille, sens)
     }
     else
     {
-        console.log("----------------------------------------")
         if(ListeCaseValeurLigne.length > 1)
         {
-            let DernierIndice = (ListeCaseValeurLigne.length - 1)
             for (let i = 0; i < ListeCaseValeurLigne.length; i ++)
             {
                 let caseActuel = ListeCaseValeurLigne[i]
-                console.log("caseActuel : " + caseActuel)
-
                 let caseSuivante = ListeCaseValeurLigne[i + 1]
-                console.log("caseSuivante : " + caseSuivante)
 
                 if (caseActuel.valeur === caseSuivante.valeur)
                 {
-                    console.log("caseActuel(Grille) Before : " + grille[caseActuel.coorTop][caseActuel.coorLeft])
                     grille[caseActuel.coorTop][caseActuel.coorLeft].valeur *= 2
-                    console.log("caseActuel(Grille) After : " + grille[caseActuel.coorTop][caseActuel.coorLeft])
                     grille[caseSuivante.coorTop][caseSuivante.coorLeft].valeur = ""
                     grille[caseSuivante.coorTop][caseSuivante.coorLeft].bool = false
                 }
 
-                if((ListeCaseValeurLigne.length - i) > 3)
+                if((ListeCaseValeurLigne.length - i) < 3)
                 {
-                    i --
+                    i ++
                 }
 
             }
         }
     }
+}
 
+function fusionnerVersColonne(colonne, grille, sens)
+{
+    let ListeCaseValeurColonne = []
+    ListeCaseValeurColonne = genererListeCaseValeurColonne(colonne, grille, sens)
 
+    if(sens === "Haut")
+    {
+        if(ListeCaseValeurColonne.length > 1)
+        {
+            for (let i = 0; i < ListeCaseValeurColonne.length; i++)
+            {
+                let caseActuel = ListeCaseValeurColonne[i]
+
+                let caseSuivante = ListeCaseValeurColonne[(i + 1)]
+
+                if (caseActuel.valeur === caseSuivante.valeur)
+                {
+                    grille[caseActuel.coorTop][caseActuel.coorLeft].valeur *= 2
+                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].valeur = ""
+                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].bool = false
+                }
+
+                if((ListeCaseValeurColonne.length - i) < 3)
+                {
+                    i ++
+                }
+
+            }
+        }
+    }
+    else
+    {
+        if(ListeCaseValeurColonne.length > 1)
+        {
+            for (let i = 0; i < ListeCaseValeurColonne.length; i ++)
+            {
+                let caseActuel = ListeCaseValeurColonne[i]
+                let caseSuivante = ListeCaseValeurColonne[i + 1]
+
+                if (caseActuel.valeur === caseSuivante.valeur)
+                {
+                    grille[caseActuel.coorTop][caseActuel.coorLeft].valeur *= 2
+                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].valeur = ""
+                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].bool = false
+                }
+
+                if((ListeCaseValeurColonne.length - i) < 3)
+                {
+                    i ++
+                }
+
+            }
+        }
+    }
 }
 
 
