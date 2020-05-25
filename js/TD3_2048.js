@@ -73,8 +73,6 @@ class maCase
 
         return str
     }
-
-
 }
 
 function creerGrille()
@@ -305,8 +303,11 @@ function deplacementVersGauche(grille)
 
 
             tasserVersLigne(ListeLigneATraiter[ligneATraiter], grille, "Gauche")
+            fusionnerVersLigne(ListeLigneATraiter[ligneATraiter], grille, "Gauche")
         }
     }
+
+
 }
 
 function deplacementVersDroite(grille)
@@ -325,6 +326,7 @@ function deplacementVersDroite(grille)
 
 
             tasserVersLigne(ListeLigneATraiter[ligneATraiter], grille, "Droite")
+            fusionnerVersLigne(ListeLigneATraiter[ligneATraiter], grille, "Droite")
         }
     }
 }
@@ -616,7 +618,6 @@ function genererListeCaseValeurLigne(ligne, grille, sens)
     {
         for(let i = tabCaseValeur.length - 1; i > -1; i --)
         {
-
             if(tabCaseValeur[i].coorTop === ligne)
             {
                 tabCaseValeurLigne[tabCaseValeurLigne.length] = tabCaseValeur[i]
@@ -626,6 +627,72 @@ function genererListeCaseValeurLigne(ligne, grille, sens)
     }
 
     return tabCaseValeurLigne
+}
+
+function fusionnerVersLigne(ligne, grille, sens)
+{
+    let ListeCaseValeurLigne = []
+    ListeCaseValeurLigne = genererListeCaseValeurLigne(ligne, grille, sens)
+    console.log("ListeCaseValeurLigne : " + ListeCaseValeurLigne)
+
+    if(sens === "Gauche")
+    {
+        if(ListeCaseValeurLigne.length > 1)
+        {
+            for (let i = 0; i < ListeCaseValeurLigne.length; i++)
+            {
+                let caseActuel = ListeCaseValeurLigne[i]
+
+                let caseSuivante = ListeCaseValeurLigne[(i + 1)]
+
+                if (caseActuel.valeur === caseSuivante.valeur)
+                {
+                    grille[caseActuel.coorTop][caseActuel.coorLeft].valeur *= 2
+                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].valeur = ""
+                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].bool = false
+                }
+
+                if((ListeCaseValeurLigne.length - i) < 3)
+                {
+                    i ++
+                }
+
+            }
+        }
+    }
+    else
+    {
+        console.log("----------------------------------------")
+        if(ListeCaseValeurLigne.length > 1)
+        {
+            let DernierIndice = (ListeCaseValeurLigne.length - 1)
+            for (let i = 0; i < ListeCaseValeurLigne.length; i ++)
+            {
+                let caseActuel = ListeCaseValeurLigne[i]
+                console.log("caseActuel : " + caseActuel)
+
+                let caseSuivante = ListeCaseValeurLigne[i + 1]
+                console.log("caseSuivante : " + caseSuivante)
+
+                if (caseActuel.valeur === caseSuivante.valeur)
+                {
+                    console.log("caseActuel(Grille) Before : " + grille[caseActuel.coorTop][caseActuel.coorLeft])
+                    grille[caseActuel.coorTop][caseActuel.coorLeft].valeur *= 2
+                    console.log("caseActuel(Grille) After : " + grille[caseActuel.coorTop][caseActuel.coorLeft])
+                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].valeur = ""
+                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].bool = false
+                }
+
+                if((ListeCaseValeurLigne.length - i) > 3)
+                {
+                    i --
+                }
+
+            }
+        }
+    }
+
+
 }
 
 
