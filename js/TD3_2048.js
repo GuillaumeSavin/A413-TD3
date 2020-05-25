@@ -120,6 +120,13 @@ function actionClavier(keyPressed, grille)
     {
         console.log("not arrow key")
     }
+    let ListeCaseVide = genererListeCaseVide(grille)
+    let insertCase = choixAleatoireCase(ListeCaseVide)
+    let newValue = obtenirNouvelleValeur()
+    insertionValeur(newValue, insertCase , grille)
+    let ListeCaseValeur = genererListeCaseValeur(grille)
+    ListeCaseVide = genererListeCaseVide(grille)
+    afficherGrille(ListeCaseValeur, ListeCaseVide)
 }
 
 function insertionValeur(valeur, caseVide, grille)
@@ -149,8 +156,15 @@ function genererListeCaseVide(grille)
             }
         }
     }
-
-    return tabCaseVide
+    console.log("tabCaseVide :\n" + tabCaseVide + " taille : " + tabCaseVide.length)
+    if(tabCaseVide.length === 0)
+    {
+        return "Vide"
+    }
+    else
+    {
+        return tabCaseVide
+    }
 }
 
 function choixAleatoireCase(listeCaseVide)
@@ -192,11 +206,14 @@ function afficherGrille(tabCaseValeur,tabCaseVide)
         tabCase[coorTop * dimension + coorLeft].innerHTML = tabCaseValeur[i].valeur
     }
 
-    for (let j = 0; j < tabCaseVide.length; j ++)
+    if(tabCaseVide !== "Vide")
     {
-        let coorTop = tabCaseVide[j].coorTop
-        let coorLeft = tabCaseVide[j].coorLeft
-        tabCase[coorTop * dimension + coorLeft].innerHTML = ""
+        for (let j = 0; j < tabCaseVide.length; j ++)
+        {
+            let coorTop = tabCaseVide[j].coorTop
+            let coorLeft = tabCaseVide[j].coorLeft
+            tabCase[coorTop * dimension + coorLeft].innerHTML = ""
+        }
     }
 }
 
@@ -300,13 +317,12 @@ function deplacementVersDroite(grille)
 
 function tasserVersColonne(colonne, grille, sens)
 {
+    console.log("sens : " + sens)
     if(sens === "Haut")
     {
         let ListeCaseValeurColonne = []
         let EventuelTopCase
         ListeCaseValeurColonne = genererListeCaseValeurColonne(colonne, grille, sens)
-
-        console.log("liste case à traiter colonne :\n" + ListeCaseValeurColonne)
 
         for(let i = 0; i < ListeCaseValeurColonne.length; i ++)
         {
@@ -314,15 +330,17 @@ function tasserVersColonne(colonne, grille, sens)
             EventuelTopCase = caseVideEventuelTop(colonne, grille, sens)
             console.log("EventuelTopCase : " + EventuelTopCase)
             console.log("case à tasser : " + caseActuelValeur)
-            if(caseActuelValeur.coorTop > 0 && EventuelTopCase.coorTop < caseActuelValeur.coorTop)
+            if(EventuelTopCase !== "Vide")
             {
-                console.log("rentre")
-
-                grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].valeur = caseActuelValeur.valeur
-                grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].bool = true
-                grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
-                grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].bool = false
+                if(caseActuelValeur.coorTop > 0 && EventuelTopCase.coorTop < caseActuelValeur.coorTop)
+                {
+                    grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].valeur = caseActuelValeur.valeur
+                    grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].bool = true
+                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
+                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].bool = false
+                }
             }
+
         }
     }
     else
@@ -331,35 +349,35 @@ function tasserVersColonne(colonne, grille, sens)
         let EventuelTopCase
         ListeCaseValeurColonne = genererListeCaseValeurColonne(colonne, grille, sens)
 
-        console.log("liste case à traiter colonne :\n" + ListeCaseValeurColonne)
-
         for(let i = 0; i < ListeCaseValeurColonne.length; i ++)
         {
             let caseActuelValeur = ListeCaseValeurColonne[i]
             EventuelTopCase = caseVideEventuelTop(colonne, grille, sens)
             console.log("EventuelTopCase : " + EventuelTopCase)
             console.log("case à tasser : " + caseActuelValeur)
-            if(caseActuelValeur.coorTop < dimension - 1 && EventuelTopCase.coorTop > caseActuelValeur.coorTop)
+            if(EventuelTopCase !== "Vide")
             {
-                console.log("rentre")
+                if(caseActuelValeur.coorTop < dimension - 1 && EventuelTopCase.coorTop > caseActuelValeur.coorTop)
+                {
 
-                grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].valeur = caseActuelValeur.valeur
-                grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].bool = true
-                grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
-                grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].bool = false
+                    grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].valeur = caseActuelValeur.valeur
+                    grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].bool = true
+                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
+                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].bool = false
+                }
             }
+
         }
     }
 
-    console.log("grille after :\n" + grille)
-    console.log("grille[0][0] : " + grille[0][0])
     let affectedCaseValue = []
     affectedCaseValue = genererListeCaseValeurColonne(colonne, grille, sens)
     let affectedCaseVide = []
     affectedCaseVide = genererListeCaseVideColonne(colonne, grille)
-    console.log("casesValeur : " + affectedCaseValue)
 
     afficherGrille(affectedCaseValue, affectedCaseVide)
+
+
 }
 
 function genererListeCaseVideColonne(colonne, grille)
@@ -367,40 +385,60 @@ function genererListeCaseVideColonne(colonne, grille)
     let tabCaseVide = genererListeCaseVide(grille)
     let tabCaseVideColonne = []
 
-    for(let i = 0; i < tabCaseVide.length; i ++)
+    if(tabCaseVide !== "Vide")
     {
-
-        if(tabCaseVide[i].coorLeft === colonne)
+        for(let i = 0; i < tabCaseVide.length; i ++)
         {
-            tabCaseVideColonne[tabCaseVideColonne.length] = tabCaseVide[i]
+
+            if(tabCaseVide[i].coorLeft === colonne)
+            {
+                tabCaseVideColonne[tabCaseVideColonne.length] = tabCaseVide[i]
+            }
+        }
+        if(tabCaseVideColonne.length > 0)
+        {
+            return tabCaseVideColonne
+        }
+        else
+        {
+            return "Vide"
         }
     }
+    else
+    {
+        return "Vide"
+    }
 
-    return tabCaseVideColonne
 }
 
 function caseVideEventuelTop(colonne, grille, sens)
 {
     let caseVideMinTop
     let ListeCaseVideColonne = genererListeCaseVideColonne(colonne,grille)
-
-    if(sens === "Haut")
+    if(ListeCaseVideColonne !== "Vide")
     {
-        caseVideMinTop = ListeCaseVideColonne[0]
+        if(sens === "Haut")
+        {
+            caseVideMinTop = ListeCaseVideColonne[0]
+        }
+        else
+        {
+            caseVideMinTop = ListeCaseVideColonne[ListeCaseVideColonne.length - 1]
+        }
+
+        return caseVideMinTop
     }
     else
     {
-        caseVideMinTop = ListeCaseVideColonne[ListeCaseVideColonne.length - 1]
+        return "Vide"
     }
 
-    return caseVideMinTop
 }
 
 function genererListeCaseValeurColonne(colonne, grille, sens)
 {
     let tabCaseValeur = genererListeCaseValeur(grille)
     let tabCaseValeurColonne = []
-
     if(sens === "Haut")
     {
         for(let i = 0; i < tabCaseValeur.length; i ++)
@@ -430,13 +468,12 @@ function genererListeCaseValeurColonne(colonne, grille, sens)
 
 function tasserVersLigne(ligne, grille, sens)
 {
+    console.log("sens : " + sens)
     if(sens === "Gauche")
     {
         let ListeCaseValeurLigne = []
         let EventuelLeftCase
         ListeCaseValeurLigne = genererListeCaseValeurLigne(ligne, grille, sens)
-
-        console.log("liste case à traiter ligne :\n" + ListeCaseValeurLigne)
 
         for(let j = 0; j < ListeCaseValeurLigne.length; j ++)
         {
@@ -444,14 +481,17 @@ function tasserVersLigne(ligne, grille, sens)
             EventuelLeftCase = caseVideEventuelLeft(ligne, grille, sens)
             console.log("EventuelLeftCase : " + EventuelLeftCase)
             console.log("case à tasser : " + caseActuelValeur)
-            if(caseActuelValeur.coorLeft > 0 && EventuelLeftCase.coorLeft < caseActuelValeur.coorLeft)
+            if(EventuelLeftCase !== "Vide")
             {
-                console.log("rentre")
+                if(caseActuelValeur.coorLeft > 0 && EventuelLeftCase.coorLeft < caseActuelValeur.coorLeft)
+                {
+                    console.log("rentre")
 
-                grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].valeur = caseActuelValeur.valeur
-                grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].bool = true
-                grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
-                grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].bool = false
+                    grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].valeur = caseActuelValeur.valeur
+                    grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].bool = true
+                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
+                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].bool = false
+                }
             }
         }
     }
@@ -461,35 +501,33 @@ function tasserVersLigne(ligne, grille, sens)
         let EventuelLeftCase
         ListeCaseValeurLigne = genererListeCaseValeurLigne(ligne, grille, sens)
 
-        console.log("liste case à traiter ligne :\n" + ListeCaseValeurLigne)
-
         for(let j = 0; j < ListeCaseValeurLigne.length; j ++)
         {
             let caseActuelValeur = ListeCaseValeurLigne[j]
             EventuelLeftCase = caseVideEventuelLeft(ligne, grille, sens)
             console.log("EventuelLeftCase : " + EventuelLeftCase)
             console.log("case à tasser : " + caseActuelValeur)
-            if(caseActuelValeur.coorLeft < dimension - 1 && EventuelLeftCase.coorLeft > caseActuelValeur.coorLeft)
+            if(EventuelLeftCase !== "Vide")
             {
-                console.log("rentre")
+                if(caseActuelValeur.coorLeft < dimension - 1 && EventuelLeftCase.coorLeft > caseActuelValeur.coorLeft)
+                {
+                    console.log("rentre")
 
-                grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].valeur = caseActuelValeur.valeur
-                grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].bool = true
-                grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
-                grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].bool = false
+                    grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].valeur = caseActuelValeur.valeur
+                    grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].bool = true
+                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
+                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].bool = false
+                }
             }
         }
     }
 
-    console.log("grille after :\n" + grille)
-    console.log("grille[0][0] : " + grille[0][0])
     let affectedCaseValue = []
     affectedCaseValue = genererListeCaseValeurLigne(ligne, grille, sens)
     let affectedCaseVide = []
     affectedCaseVide = genererListeCaseVideLigne(ligne, grille)
-    console.log("casesValeur : " + affectedCaseValue)
-
     afficherGrille(affectedCaseValue, affectedCaseVide)
+
 }
 
 function genererListeCaseVideLigne(ligne, grille)
@@ -497,33 +535,54 @@ function genererListeCaseVideLigne(ligne, grille)
     let tabCaseVide = genererListeCaseVide(grille)
     let tabCaseVideLigne = []
 
-    for(let i = 0; i < tabCaseVide.length; i ++)
+    if(tabCaseVide !== "Vide")
     {
-
-        if(tabCaseVide[i].coorTop === ligne)
+        for(let i = 0; i < tabCaseVide.length; i ++)
         {
-            tabCaseVideLigne[tabCaseVideLigne.length] = tabCaseVide[i]
+
+            if(tabCaseVide[i].coorTop === ligne)
+            {
+                tabCaseVideLigne[tabCaseVideLigne.length] = tabCaseVide[i]
+            }
+        }
+        if(tabCaseVideLigne.length > 0)
+        {
+            return tabCaseVideLigne
+        }
+        else
+        {
+            return "Vide"
         }
     }
+    else
+    {
+        return "Vide"
+    }
 
-    return tabCaseVideLigne
 }
 
 function caseVideEventuelLeft(ligne, grille, sens)
 {
     let caseVideEventuelLeft
     let ListeCaseVideLigne = genererListeCaseVideLigne(ligne,grille)
-
-    if(sens === "Gauche")
+    if(ListeCaseVideLigne !== "Vide")
     {
-        caseVideEventuelLeft = ListeCaseVideLigne[0]
+        if(sens === "Gauche")
+        {
+            caseVideEventuelLeft = ListeCaseVideLigne[0]
+        }
+        else
+        {
+            caseVideEventuelLeft = ListeCaseVideLigne[ListeCaseVideLigne.length - 1]
+        }
+
+        return caseVideEventuelLeft
     }
     else
     {
-        caseVideEventuelLeft = ListeCaseVideLigne[ListeCaseVideLigne.length - 1]
+        return "Vide"
     }
 
-    return caseVideEventuelLeft
 }
 
 function genererListeCaseValeurLigne(ligne, grille, sens)
