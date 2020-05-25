@@ -1,39 +1,41 @@
-dimension = 4
+dimension = 4                                                       //variable globale contenant la
 function init()
 {
-    let grille = creerGrille()
-    let ListeCaseVide = genererListeCaseVide(grille)
-    let insertCase = choixAleatoireCase(ListeCaseVide)
-    let newValue = obtenirNouvelleValeur()
-    insertionValeur(newValue, insertCase , grille)
-    insertCase = choixAleatoireCase(ListeCaseVide)
-    newValue = obtenirNouvelleValeur()
-    insertionValeur(newValue, insertCase , grille)
-    let ListeCaseValeur = genererListeCaseValeur(grille)
-    ListeCaseVide = genererListeCaseVide(grille)
-    afficherGrille(ListeCaseValeur, ListeCaseVide)
+    let grille = creerGrille()                                      //creer la grille
+    let ListeCaseVide = genererListeCaseVide(grille)                // genere un tableau contenant toutes les cases vide
+    let insertCase = choixAleatoireCase(ListeCaseVide)              //choisis aleatoirement une case parmi celles qui sont vides
+    let newValue = obtenirNouvelleValeur()                          // choisi une valeur aléatoire pour une case pouvant etre 2 ou 4
+    insertionValeur(newValue, insertCase , grille)                  //insere la case choisi avec la valeur aleatoire dans la grille
 
-    document.body.addEventListener("keydown", function(key)
+    insertCase = choixAleatoireCase(ListeCaseVide)                  //meme operation que le code precedent : choix d'une case vide aleatoirement
+    newValue = obtenirNouvelleValeur()                              //genere aleatoirement sa future valeur
+    insertionValeur(newValue, insertCase , grille)                  //insere la case dans la grille avec sa valeur
+
+    let ListeCaseValeur = genererListeCaseValeur(grille)            //genere un tableau pour recuperer les cases possédant une valeur
+    ListeCaseVide = genererListeCaseVide(grille)                    //genere un tableau pour recuperer les cases vide
+    afficherGrille(ListeCaseValeur, ListeCaseVide)                  // fais le lien avec la page HTML pour mettre à jour l'affiche par rapport à la grille virtuel
+
+    document.body.addEventListener("keydown", function(key)                 //permet d'activer mon code à l'appuis d'une touche
     {
-        actionClavier(key, grille)
+        actionClavier(key, grille)                                                                        //code à activer lors de l'appui d'une touche, on garde la touche et la grille en parametre pour pouvoir les utiliser plus tard
     })
 }
 
-class maCase
+class maCase                                                        //classe maCase qui est constitue de la valeur, de son status bool(pour savoir si il y a une valeur, de ses coordonnes dans la grille
 {
     valeur
     bool
     coorTop
     coorLeft
 
-    constructor(Top, Left)
+    constructor(Top, Left)                                          //constructeur qui genere les cases par defaut en plus de recevoir leur coordonnees dans la grille
     {
         this.valeur = ""
         this.bool = false
         this.coorTop = Top
         this.coorLeft = Left
     }
-    setValue(value)
+    setValue(value)                                                 //ensemble de setter et getter pour interagir avec l'objet maCase
     {
         this.valeur = value
     }
@@ -65,7 +67,7 @@ class maCase
     {
         return this.bool
     }
-    toString()
+    toString()                                                      //méthode pour permettre d'afficher tous les attribats de l'objet maCase, surtout utile pour le debug
     {
         let str = ""
 
@@ -75,28 +77,27 @@ class maCase
     }
 }
 
-function creerGrille()
+function creerGrille()                                             //fonction pour creer ma grille
 {
-    let grille =  []
-    for(let i = 0; i < dimension; i ++)
+    let grille =  []                                               //initialisation de la grille avec une dimension
+    for(let i = 0; i < dimension; i ++)                            //boucle parcourant toute la grille pour attribuer une case vide
     {
-        grille[i] = []
+        grille[i] = []                                             //ajoute une deuxieme dimension a la grille afin d'avoir une matrice (permet de garder la meme vue mentale que sur la page HTML)
         for(let j = 0; j < dimension; j ++)
         {
-            grille[i][j] = new maCase(i, j)
+            grille[i][j] = new maCase(i, j)                        //attribue une case avec les coordonnées
         }
     }
 
     return grille
 }
 
-function actionClavier(keyPressed, grille)
+function actionClavier(keyPressed, grille)                        //gere les evenements claviers en enclenchant le bon code selon la touche appuyer
 {
     let detectedKey = keyPressed.key
 
     if(detectedKey === "ArrowUp")
     {
-
         deplacementVersHaut(grille)
     }
     else if(detectedKey === "ArrowDown")
@@ -118,9 +119,10 @@ function actionClavier(keyPressed, grille)
     {
         console.log("not arrow key")
     }
-    let ListeCaseVide = genererListeCaseVide(grille)
+
+    let ListeCaseVide = genererListeCaseVide(grille)                                //une fois tasser et fusionner affiche le tableau comme dans le init
     let insertCase = choixAleatoireCase(ListeCaseVide)
-    if(insertCase !== "Bloqué")
+    if(insertCase !== "Bloqué")                                                     //empeche de bugger quand le joueur ne peux plus jouer
     {
         let newValue = obtenirNouvelleValeur()
         insertionValeur(newValue, insertCase , grille)
@@ -131,7 +133,7 @@ function actionClavier(keyPressed, grille)
 
 }
 
-function insertionValeur(valeur, caseVide, grille)
+function insertionValeur(valeur, caseVide, grille)                              //fonction pour inserer une valeur dans la grille grace à la caseSouhaité sa valeur et la grille où l'enegistrer
 {
     let coorTop = caseVide.coorTop
     let coorLeft = caseVide.coorLeft
@@ -146,24 +148,24 @@ function insertionValeur(valeur, caseVide, grille)
 
 }
 
-function genererListeCaseVide(grille)
+function genererListeCaseVide(grille)                                       //genere la liste de case vide pour simplifier les boucles et les variables à manipuler
 {
     let tabCaseVide = []
 
-    for(let i = 0; i < dimension; i ++)
+    for(let i = 0; i < dimension; i ++)                                    //boucle parcourant la grille à la recherche de caseVide
     {
         for(let j = 0; j < dimension; j ++)
         {
-            let caseActuel = grille[i][j]
+            let caseActuel = grille[i][j]                                 //case actuel à traiter
 
-            if(!caseActuel.bool)
+            if(!caseActuel.bool)                                          //test si le status pour savoir si la case est vide
             {
-                tabCaseVide[tabCaseVide.length] = caseActuel
+                tabCaseVide[tabCaseVide.length] = caseActuel              //si vide on le rajoute dans notre tableau/liste qui repertorie les cases vide
             }
         }
     }
 
-    if(tabCaseVide.length === 0)
+    if(tabCaseVide.length === 0)                                        //prise en compte de la possibilité qu'il n'y ai plus de cases Vides donc liste Vide
     {
         return "Vide"
     }
@@ -173,13 +175,13 @@ function genererListeCaseVide(grille)
     }
 }
 
-function choixAleatoireCase(listeCaseVide)
+function choixAleatoireCase(listeCaseVide)                              //fonction pour choisir aleatoirement une case vide dans la grille
 {
 
     let Max = listeCaseVide.length - 1
-    let IndiceCaseAlea = Math.floor(Math.random() * 11)
-    IndiceCaseAlea = Math.floor(Math.random() * (Max + 1))
-    let caseVideChoisi = listeCaseVide[IndiceCaseAlea]
+    let IndiceCaseAlea
+    IndiceCaseAlea = Math.floor(Math.random() * (Max + 1))          //choisit une valeur alétoirment entre 0 et la taille de la liste de case vide
+    let caseVideChoisi = listeCaseVide[IndiceCaseAlea]                 //la valeur obtenu aleatoirement va designer l'indice d'iune case vide dans la liste
 
     if(listeCaseVide !== "Vide")
     {
@@ -193,34 +195,34 @@ function choixAleatoireCase(listeCaseVide)
     }
 }
 
-function obtenirNouvelleValeur()
+function obtenirNouvelleValeur()                                    //fonction pour obtenir une valeur aleatoirement soit 2 soit 4
 {
-    let valeurAlea = Math.floor(Math.random() * 11)
+    let valeurAlea = Math.floor(Math.random() * 11)             //choisit un nombre aléatoirement entre 0 et 10
 
-    if(valeurAlea <= 9)
+    if(valeurAlea <= 9)                                             //dans 90% des cas la valeur sera 2
     {
         return 2;
     }
-    else
+    else                                                            //dans 10% des cas la valeur sera 4
     {
         return 4;
     }
 }
 
-function afficherGrille(tabCaseValeur,tabCaseVide)
+function afficherGrille(tabCaseValeur,tabCaseVide)                  //fonction pour mettre a jour les cases de la page HTML
 {
-    let tabCase = document.querySelectorAll(".case")
+    let tabCase = document.querySelectorAll(".case")     //enregistre les objets possédant la classe case du HTML dans une variable afin de pouvoir interagir avec plus facilement
 
-    for (let i = 0; i < tabCaseValeur.length; i ++)
+    for (let i = 0; i < tabCaseValeur.length; i ++)                 //parcourt le tableau de case possédant une valeur pour les attribuer aux éléments HTML obtenu ci dessus
     {
         let coorTop = tabCaseValeur[i].coorTop
         let coorLeft = tabCaseValeur[i].coorLeft
-        tabCase[coorTop * dimension + coorLeft].innerHTML = tabCaseValeur[i].valeur
+        tabCase[coorTop * dimension + coorLeft].innerHTML = tabCaseValeur[i].valeur                     //fais le lien entre un tableau de deux dimensions et un tableau à une dimension pour ensuite mettre à jour la valeur
     }
 
     if(tabCaseVide !== "Vide")
     {
-        for (let j = 0; j < tabCaseVide.length; j ++)
+        for (let j = 0; j < tabCaseVide.length; j ++)               // mets à jour les cases vides
         {
             let coorTop = tabCaseVide[j].coorTop
             let coorLeft = tabCaseVide[j].coorLeft
@@ -229,7 +231,7 @@ function afficherGrille(tabCaseValeur,tabCaseVide)
     }
 }
 
-function genererListeCaseValeur(grille)
+function genererListeCaseValeur(grille)                           //fonction pour generer une liste de case possédant une valeur même principe que la fonction pour la iste de caseVide
 {
     let tabCaseValeur = []
     for(let i = 0; i < dimension; i ++)
@@ -247,28 +249,28 @@ function genererListeCaseValeur(grille)
     return tabCaseValeur
 }
 
-function deplacementVersHaut(grille)
+function deplacementVersHaut(grille)                                                //fonction qui gere l'action Touche Haut de l'utilisateur en tassant et fusionnant les cases pouvant l'etre
 {
     let ListeCaseValeur = genererListeCaseValeur(grille)
     let ListeColonneATraiter = []
 
-    for(let i = 0; i < ListeCaseValeur.length; i ++)
+    for(let i = 0; i < ListeCaseValeur.length; i ++)                                //boucle parcourant la liste des cases possédant une valeur dans la grille pour extraire les colonnes à traiter
     {
-        if(!(ListeColonneATraiter.includes(ListeCaseValeur[i].coorLeft)))
+        if(!(ListeColonneATraiter.includes(ListeCaseValeur[i].coorLeft)))           //verifie si la colonne de la case actuel ne fait pas deja partie de la liste
         {
             let colonne = ListeCaseValeur[i].coorLeft
             let colonneATraiter = ListeColonneATraiter.length
 
-            ListeColonneATraiter[colonneATraiter] = colonne
+            ListeColonneATraiter[colonneATraiter] = colonne                         //rajoute la colonne à traiter
 
 
-            tasserVersColonne(ListeColonneATraiter[colonneATraiter], grille, "Haut")
-            fusionnerVersColonne(ListeColonneATraiter[colonneATraiter], grille, "Haut")
+            tasserVersColonne(ListeColonneATraiter[colonneATraiter], grille, "Haut")                //fonction pour tasser les cases dans la direction souhaité prenant en parametre juste les colonnes à traiter
+            fusionnerVersColonne(ListeColonneATraiter[colonneATraiter], grille, "Haut")             //fonction pour fusionner les cases dans la direction souhaité prenant en parametre juste les colonnes à traiter
         }
     }
 }
 
-function deplacementVersBas(grille)
+function deplacementVersBas(grille)                                             //meme principe que fonction ci-dessus mais pour la touche fléchée Bas
 {
     let ListeCaseValeur = genererListeCaseValeur(grille)
     let ListeColonneATraiter = []
@@ -289,7 +291,7 @@ function deplacementVersBas(grille)
     }
 }
 
-function deplacementVersGauche(grille)
+function deplacementVersGauche(grille)                              //meme principe que fonction ci-dessus mais pour la touche fléchée Gauche
 {
     let ListeCaseValeur = genererListeCaseValeur(grille)
     let ListeLigneATraiter = []
@@ -312,7 +314,7 @@ function deplacementVersGauche(grille)
 
 }
 
-function deplacementVersDroite(grille)
+function deplacementVersDroite(grille)                                                          //meme principe que fonction ci-dessus mais pour la touche fléchée Droite
 {
     let ListeCaseValeur = genererListeCaseValeur(grille)
     let ListeLigneATraiter = []
@@ -333,15 +335,15 @@ function deplacementVersDroite(grille)
     }
 }
 
-function tasserVersColonne(colonne, grille, sens)
+function tasserVersColonne(colonne, grille, sens)                                                   //fonction pour tasser les colonnes
 {
-    if(sens === "Haut")
+    if(sens === "Haut")                                                                             //prend en compte le sens du "tassage"
     {
         let ListeCaseValeurColonne = []
         let EventuelTopCase
-        ListeCaseValeurColonne = genererListeCaseValeurColonne(colonne, grille, sens)
+        ListeCaseValeurColonne = genererListeCaseValeurColonne(colonne, grille, sens)              //recupere les cases possédant une valeur dans la colonne à traiter
 
-        for(let i = 0; i < ListeCaseValeurColonne.length; i ++)
+        for(let i = 0; i < ListeCaseValeurColonne.length; i ++)                                    //boucle pour tasser une à une les cases dans la colonne
         {
             let caseActuelValeur = ListeCaseValeurColonne[i]
 
@@ -349,18 +351,18 @@ function tasserVersColonne(colonne, grille, sens)
 
             if(EventuelTopCase !== "Vide")
             {
-                if(caseActuelValeur.coorTop > 0 && EventuelTopCase.coorTop < caseActuelValeur.coorTop)
+                if(caseActuelValeur.coorTop > 0 && EventuelTopCase.coorTop < caseActuelValeur.coorTop)                          //si case vide disponible pour tassage alors on "tasse"
                 {
-                    grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].valeur = caseActuelValeur.valeur
+                    grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].valeur = caseActuelValeur.valeur                  //la case vide prend la valeur de l'ancienne case à tasser
                     grille[EventuelTopCase.coorTop][EventuelTopCase.coorLeft].bool = true
-                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
+                    grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""                                     //l'ancienne case à tasser devient une case vide
                     grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].bool = false
                 }
             }
 
         }
     }
-    else
+    else                                                                                                //meme principe mais dans un sens différent pour simplifier le probleme
     {
         let ListeCaseValeurColonne = []
         let EventuelTopCase
@@ -397,7 +399,7 @@ function tasserVersColonne(colonne, grille, sens)
 
 }
 
-function genererListeCaseVideColonne(colonne, grille)
+function genererListeCaseVideColonne(colonne, grille)                                   //fonction pour generer une liste repertoriant les cases vide de la colonne à traiter
 {
     let tabCaseVide = genererListeCaseVide(grille)
     let tabCaseVideColonne = []
@@ -428,7 +430,7 @@ function genererListeCaseVideColonne(colonne, grille)
 
 }
 
-function caseVideEventuelTop(colonne, grille, sens)
+function caseVideEventuelTop(colonne, grille, sens)                                         //trouve la meilleur case vide pour evutuellement servir à "tasser"
 {
     let caseVideMinTop
     let ListeCaseVideColonne = genererListeCaseVideColonne(colonne,grille)
@@ -436,11 +438,11 @@ function caseVideEventuelTop(colonne, grille, sens)
     {
         if(sens === "Haut")
         {
-            caseVideMinTop = ListeCaseVideColonne[0]
+            caseVideMinTop = ListeCaseVideColonne[0]                                        //prend la premiere valeur car liste trie donc coordonnées la plus basse possible
         }
         else
         {
-            caseVideMinTop = ListeCaseVideColonne[ListeCaseVideColonne.length - 1]
+            caseVideMinTop = ListeCaseVideColonne[ListeCaseVideColonne.length - 1]        //prend la derniere valeur du tableau si le sens est bas car le tableau est trié
         }
 
         return caseVideMinTop
@@ -452,7 +454,7 @@ function caseVideEventuelTop(colonne, grille, sens)
 
 }
 
-function genererListeCaseValeurColonne(colonne, grille, sens)
+function genererListeCaseValeurColonne(colonne, grille, sens)           //meme principe que pour les cases vides
 {
     let tabCaseValeur = genererListeCaseValeur(grille)
     let tabCaseValeurColonne = []
@@ -483,7 +485,7 @@ function genererListeCaseValeurColonne(colonne, grille, sens)
     return tabCaseValeurColonne
 }
 
-function tasserVersLigne(ligne, grille, sens)
+function tasserVersLigne(ligne, grille, sens)                               //meme principe que la fonction de tassage précédente mais en utilisant une coordonnées differente comme base pour ne traiter que les lignes
 {
 
     if(sens === "Gauche")
@@ -631,29 +633,29 @@ function genererListeCaseValeurLigne(ligne, grille, sens)
     return tabCaseValeurLigne
 }
 
-function fusionnerVersLigne(ligne, grille, sens)
+function fusionnerVersLigne(ligne, grille, sens)                                    //fonction qui cherche les cases à fusionner et les "fusionnent" si elle en trouve
 {
     let ListeCaseValeurLigne = []
-    ListeCaseValeurLigne = genererListeCaseValeurLigne(ligne, grille, sens)
+    ListeCaseValeurLigne = genererListeCaseValeurLigne(ligne, grille, sens)         //on extrait de la grille les cases à fusionner
 
     if(sens === "Gauche")
     {
         if(ListeCaseValeurLigne.length > 1)
         {
-            for (let i = 0; i < ListeCaseValeurLigne.length; i++)
+            for (let i = 0; i < ListeCaseValeurLigne.length; i++)                  //on parcourt les case extraites pour trouver deux cases se touchant
             {
                 let caseActuel = ListeCaseValeurLigne[i]
 
                 let caseSuivante = ListeCaseValeurLigne[(i + 1)]
 
-                if (caseActuel.valeur === caseSuivante.valeur)
+                if (caseActuel.valeur === caseSuivante.valeur)                      //si elles possédent la meme valeur alors on les "fusionnent"
                 {
-                    grille[caseActuel.coorTop][caseActuel.coorLeft].valeur *= 2
-                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].valeur = ""
+                    grille[caseActuel.coorTop][caseActuel.coorLeft].valeur *= 2                         //la valeur de la case actuelle double
+                    grille[caseSuivante.coorTop][caseSuivante.coorLeft].valeur = ""                     //la case suivante "disparait"
                     grille[caseSuivante.coorTop][caseSuivante.coorLeft].bool = false
                 }
 
-                if((ListeCaseValeurLigne.length - i) < 3)
+                if((ListeCaseValeurLigne.length - i) < 3)                                               //permet de sortir de la boucle si il n'y a plus de cases à traiter car plus de paire
                 {
                     i ++
                 }
