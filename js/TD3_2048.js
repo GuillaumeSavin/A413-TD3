@@ -122,11 +122,15 @@ function actionClavier(keyPressed, grille)
     }
     let ListeCaseVide = genererListeCaseVide(grille)
     let insertCase = choixAleatoireCase(ListeCaseVide)
-    let newValue = obtenirNouvelleValeur()
-    insertionValeur(newValue, insertCase , grille)
-    let ListeCaseValeur = genererListeCaseValeur(grille)
-    ListeCaseVide = genererListeCaseVide(grille)
-    afficherGrille(ListeCaseValeur, ListeCaseVide)
+    if(insertCase !== "Bloqué")
+    {
+        let newValue = obtenirNouvelleValeur()
+        insertionValeur(newValue, insertCase , grille)
+        let ListeCaseValeur = genererListeCaseValeur(grille)
+        ListeCaseVide = genererListeCaseVide(grille)
+        afficherGrille(ListeCaseValeur, ListeCaseVide)
+    }
+
 }
 
 function insertionValeur(valeur, caseVide, grille)
@@ -134,10 +138,14 @@ function insertionValeur(valeur, caseVide, grille)
     let coorTop = caseVide.coorTop
     let coorLeft = caseVide.coorLeft
 
-    let caseActuel = grille[coorTop][coorLeft]
+    if (caseVide !== "Bloqué")
+    {
+        let caseActuel = grille[coorTop][coorLeft]
 
-    caseActuel.valeur = valeur
-    caseActuel.bool = true
+        caseActuel.valeur = valeur
+        caseActuel.bool = true
+    }
+
 }
 
 function genererListeCaseVide(grille)
@@ -156,7 +164,7 @@ function genererListeCaseVide(grille)
             }
         }
     }
-    console.log("tabCaseVide :\n" + tabCaseVide + " taille : " + tabCaseVide.length)
+
     if(tabCaseVide.length === 0)
     {
         return "Vide"
@@ -174,11 +182,17 @@ function choixAleatoireCase(listeCaseVide)
     let IndiceCaseAlea = Math.floor(Math.random() * 11)
     IndiceCaseAlea = Math.floor(Math.random() * (Max + 1))
     let caseVideChoisi = listeCaseVide[IndiceCaseAlea]
-    listeCaseVide.splice(IndiceCaseAlea, 1)
 
-    return caseVideChoisi
+    if(listeCaseVide !== "Vide")
+    {
+        listeCaseVide.splice(IndiceCaseAlea, 1)
 
-
+        return caseVideChoisi
+    }
+    else
+    {
+        return "Bloqué"
+    }
 }
 
 function obtenirNouvelleValeur()
@@ -317,7 +331,6 @@ function deplacementVersDroite(grille)
 
 function tasserVersColonne(colonne, grille, sens)
 {
-    console.log("sens : " + sens)
     if(sens === "Haut")
     {
         let ListeCaseValeurColonne = []
@@ -327,9 +340,9 @@ function tasserVersColonne(colonne, grille, sens)
         for(let i = 0; i < ListeCaseValeurColonne.length; i ++)
         {
             let caseActuelValeur = ListeCaseValeurColonne[i]
+
             EventuelTopCase = caseVideEventuelTop(colonne, grille, sens)
-            console.log("EventuelTopCase : " + EventuelTopCase)
-            console.log("case à tasser : " + caseActuelValeur)
+
             if(EventuelTopCase !== "Vide")
             {
                 if(caseActuelValeur.coorTop > 0 && EventuelTopCase.coorTop < caseActuelValeur.coorTop)
@@ -352,9 +365,9 @@ function tasserVersColonne(colonne, grille, sens)
         for(let i = 0; i < ListeCaseValeurColonne.length; i ++)
         {
             let caseActuelValeur = ListeCaseValeurColonne[i]
+
             EventuelTopCase = caseVideEventuelTop(colonne, grille, sens)
-            console.log("EventuelTopCase : " + EventuelTopCase)
-            console.log("case à tasser : " + caseActuelValeur)
+
             if(EventuelTopCase !== "Vide")
             {
                 if(caseActuelValeur.coorTop < dimension - 1 && EventuelTopCase.coorTop > caseActuelValeur.coorTop)
@@ -468,7 +481,7 @@ function genererListeCaseValeurColonne(colonne, grille, sens)
 
 function tasserVersLigne(ligne, grille, sens)
 {
-    console.log("sens : " + sens)
+
     if(sens === "Gauche")
     {
         let ListeCaseValeurLigne = []
@@ -478,14 +491,14 @@ function tasserVersLigne(ligne, grille, sens)
         for(let j = 0; j < ListeCaseValeurLigne.length; j ++)
         {
             let caseActuelValeur = ListeCaseValeurLigne[j]
+
             EventuelLeftCase = caseVideEventuelLeft(ligne, grille, sens)
-            console.log("EventuelLeftCase : " + EventuelLeftCase)
-            console.log("case à tasser : " + caseActuelValeur)
+
             if(EventuelLeftCase !== "Vide")
             {
                 if(caseActuelValeur.coorLeft > 0 && EventuelLeftCase.coorLeft < caseActuelValeur.coorLeft)
                 {
-                    console.log("rentre")
+
 
                     grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].valeur = caseActuelValeur.valeur
                     grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].bool = true
@@ -504,15 +517,13 @@ function tasserVersLigne(ligne, grille, sens)
         for(let j = 0; j < ListeCaseValeurLigne.length; j ++)
         {
             let caseActuelValeur = ListeCaseValeurLigne[j]
+
             EventuelLeftCase = caseVideEventuelLeft(ligne, grille, sens)
-            console.log("EventuelLeftCase : " + EventuelLeftCase)
-            console.log("case à tasser : " + caseActuelValeur)
+
             if(EventuelLeftCase !== "Vide")
             {
                 if(caseActuelValeur.coorLeft < dimension - 1 && EventuelLeftCase.coorLeft > caseActuelValeur.coorLeft)
                 {
-                    console.log("rentre")
-
                     grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].valeur = caseActuelValeur.valeur
                     grille[EventuelLeftCase.coorTop][EventuelLeftCase.coorLeft].bool = true
                     grille[caseActuelValeur.coorTop][caseActuelValeur.coorLeft].valeur = ""
